@@ -32,5 +32,18 @@ Procedure:
     python manage.py makemigrations
     python manage.py migrate
     ```
+    NOTE: If its your first time migrating, you may need to manually add migration module in each app.
+    ```
+    python manage.py makemigrations store
+    python manage.py migrate
+    ```
+- Create a superuser
+    ```
+    python manage.py createsuperuser 
+    ```
+- Run development server on localhost
+    ```
+    python manage.py runserver 
+    ```
     
     
