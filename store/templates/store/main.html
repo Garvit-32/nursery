@@ -1,0 +1,94 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <title>LivePot</title>
+    <script type = "text/javascript">
+    var user = "{{request.user}}"
+    function getToken(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getToken('csrftoken');
+    </script>
+
+  </head>
+  <body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="{% url 'store' %}">LivePot</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto"> 
+      {% comment %} <li class="nav-item active">
+        <a class="nav-link" href="{% url 'store' %}">Store</a>
+      </li> {% endcomment %}
+      {% if user.is_authenticated %}
+      {% if user.customer.sellerId == None %}
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'register_seller' %}">Make seller account</a>
+      </li>
+      {% else %}
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+      </li>
+      {% endif %}
+      {% endif %}
+      
+
+    </ul>
+
+
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success mr-2 my-sm-0" type="submit">Search</button>
+    </form>
+      {% if user.is_authenticated %}
+      <a href="{% url 'logout' %}" class="btn btn-warning mr-4">Logout</a>
+      <div class="row">
+      <a href="{%url 'cart' %}"><img class="my-2"  id="cart-icon" src="{% static 'images/cart.png' %}" alt=""></a>
+      <p class="mr-2" id="cart-total">{{cartItems}}</p>
+      </div>
+      {% else %}
+      <a href="{% url 'login' %}" class="btn btn-warning mx-2">Login/Register</a>
+      {% endif %}
+
+  </div>
+</nav>
+
+    <div class="container">
+    {% block content %}
+    {% endblock content %}
+    </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="{% static 'js/cart.js '%}"></script>
+  </body>
+</html>

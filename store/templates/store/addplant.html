@@ -1,0 +1,74 @@
+{% extends 'store/main.html' %}
+
+
+{% block content %}
+
+
+{% comment %} <form action="" method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+{{form.as_p}}
+<button type="submit">Upload</button> 
+</form>
+ {% endcomment %}
+
+
+<section class="section-content padding-y">
+
+<!-- ============================ COMPONENT REGISTER   ================================= -->
+	<div class="card mx-auto" style="max-width:520px; margin-top:40px;">
+      <article class="card-body">
+		<header class="mb-4"><h4 class="card-title">Add Plant</h4></header>
+		<form method="POST" enctype="multipart/form-data" >
+		{% csrf_token %}
+			{% for field in form %}
+				{% if field.label == "Name" or field.label == "Price" or field.label == "Desc" %}{% endif %}
+				{% if field.label == "Image" %}
+				<div class="form-row">
+					<div class="col-md-6 form-group">
+						<label>Name of plant</label>
+					  	<input required type="text" name="name" class="form-control" placeholder="">
+					</div> <!-- form-group end.// -->
+
+
+					<div class="col-md-6 form-group">
+						<label>Price</label>
+					  	<input required type="number" name="price" class="form-control" placeholder="">
+					</div> <!-- form-group end.// -->
+				
+				</div> <!-- form-row end.// -->
+				
+				<div class="form-group">
+					<label>Description</label>
+					<textarea type="text" name="desc" class="form-control" placeholder=""></textarea>
+				</div> <!-- form-group end.// -->
+				
+				<div class="form-row">
+					<p class="mr-4">&nbsp;Image</p>
+					{{field}}
+					
+				</div>
+				{% endif %}
+
+			{% endfor %}
+			<br>
+
+			    <div class="form-group">
+			        <button  type="submit" class="btn btn-success ">&nbsp; Add &nbsp;  </button>
+			    </div> <!-- form-group// -->      
+
+
+			</form>
+		</article><!-- card-body.// -->
+    </div> <!-- card .// -->
+
+
+</section>
+<script>
+    document.getElementById('cart-icon').classList.add('hidden');
+    document.getElementById('cart-total').classList.add('hidden');
+    
+    
+</script>
+
+{% endblock content %}
+

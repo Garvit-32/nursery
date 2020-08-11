@@ -1,0 +1,64 @@
+{% extends 'store/main.html' %}
+
+{% block content %}
+<div class="card mx-auto box-element" style="max-width:520px; margin-top:30px">
+  <article class="card-body">
+    <header class="mb-4">
+      <h4 class="card-title">Sign up</h4>
+    </header>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-row">
+      {% for field in form %}
+      {% if field.label == "Username" %}
+      {% elif field.label == "Email" %}
+      <div class="col-lg-12 form-group">
+        {{field.label}}
+        {{field}}
+        <small class="form-text text-muted">We'll never share your email with anyone else.</small>
+        {% for error in field.errors  %}
+          <span class="badge badge-danger">{{error|escape}}</span>
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+          <span class="badge badge-danger">{{error|escape}}</span>
+          {% endfor %}
+      </div>
+      {% else %}
+      <div class="col-lg-6 form-group">
+        {% if field.label == "Password2" %}
+          Password
+          {{field}}
+        {% elif field.label == "Password1" %}
+          Confirm Password
+          {{field}}
+        {% else %}
+        
+        {{field.label}}
+        {{field}}
+          {% for error in field.errors  %}
+          <span class="badge badge-danger">{{error|escape}}</span>
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+          <span class="badge badge-danger">{{error|escape}}</span>
+          {% endfor %}
+          {% endif %}
+      </div>
+      {% endif %}
+      {% endfor %}
+      </div>
+
+          {% for error in field.errors  %}
+          <span class="badge badge-danger">{{error|escape}}</span>
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+          <span class="badge badge-danger">{{error|escape}}</span>
+          {% endfor %}
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block"> Register </button>
+      </div>
+    </form>
+    <p class="text-center mt-4">Have an account? <a href="{% url 'login' %}">Log In</a></p>
+  </article>
+</div>
+{% endblock content %}

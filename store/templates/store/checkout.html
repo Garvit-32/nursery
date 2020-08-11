@@ -1,0 +1,150 @@
+{% extends 'store/main.html' %} {% load static %} {% block content %}
+<div class="row">
+    <div class="col-lg-6">
+        <div class="box-element" id="form-wrapper">
+            <form id="form" method="POST">
+                {% csrf_token %}
+                <h4 class="mb-4">Shipping Info:</h4>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input required type="text" class="form-control" name="address" placeholder="1234 Main St">
+                </div>
+                <div class="form-group">
+                    <label>Address 2</label>
+                    <input required type="text" class="form-control" name="address2" placeholder="Apartment, studio, or floor">
+                </div>
+                <div class="form-field">
+                    <label>City</label>
+                    <input required type="text" class="form-control" name="city">
+                </div>
+                <div class="form-field">
+                    <label>State</label> {% comment %} <input required type="text" class="form-control" name="state"> {% endcomment %}
+                    <select required class="form-control" name="state">
+                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                        <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                        <option value="Assam">Assam</option>
+                        <option value="Bihar">Bihar</option>
+                        <option value="Chandigarh">Chandigarh</option>
+                        <option value="Chhattisgarh">Chhattisgarh</option>
+                        <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
+                        <option value="Daman and Diu">Daman and Diu</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Lakshadweep">Lakshadweep</option>
+                        <option value="Puducherry">Puducherry</option>
+                        <option value="Goa">Goa</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="Haryana">Haryana</option>
+                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                        <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                        <option value="Jharkhand">Jharkhand</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Kerala">Kerala</option>
+                        <option value="Madhya Pradesh">Madhya Pradesh</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="Manipur">Manipur</option>
+                        <option value="Meghalaya">Meghalaya</option>
+                        <option value="Mizoram">Mizoram</option>
+                        <option value="Nagaland">Nagaland</option>
+                        <option value="Odisha">Odisha</option>
+                        <option value="Punjab">Punjab</option>
+                        <option value="Rajasthan">Rajasthan</option>
+                        <option value="Sikkim">Sikkim</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="Telangana">Telangana</option>
+                        <option value="Tripura">Tripura</option>
+                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                        <option value="Uttarakhand">Uttarakhand</option>
+                        <option value="West Bengal">West Bengal</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label>Pin Code</label>
+                    <input required type="text" class="form-control" name="pincode">
+                </div>
+                <hr>
+                <input id="form-button" class="btn btn-success" type="submit" value="Continue">
+        </div>
+        </form>
+        <div class="box-element hidden" id="payment-info">
+            <small>Payment options</small>
+            <button id="make-payment">Make Payment</button>
+            <br>
+        </div>
+
+
+
+    </div>
+    <div class="col-lg-6">
+        <div class="box-element">
+            <a class="btn btn-outline-dark" href="{% url 'cart' %}">&#8592; Back to Cart</a>
+            <a class="btn btn-outline-dark" href="{% url 'store' %}">&#8592; Back to Store</a>
+            <hr>
+            <h3>Order Summary</h3>
+            <hr> {% for item in items %}
+            <div class="cart-row">
+                <div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}" alt=""></div>
+                <div class="mt-3" style="flex:2">
+                    <p>{{item.product.name}}</p>
+                </div>
+                <div class="mt-3" style="flex:1">
+                    <p>&#8377;{{item.product.price|floatformat:2}}</p>
+                </div>
+                <div class="mt-3" style="flex:1">
+                    <p>x{{item.quantity}}</p>
+                </div>
+            </div>
+            {% endfor %}
+            <h5>Items: {{order.get_cart_items}}</h5>
+            <h5>Total: &#8377;{{order.get_cart_total|floatformat:2}}</h5>
+        </div>
+    </div>
+</div>
+
+<script>
+    var form = document.getElementById('form')
+    var total = "{{order.get_cart_total}}"
+    form.addEventListener('submit', function(e) {
+        e.preventDefault()
+        console.log('Form submitted ..')
+        document.getElementById('form-button').classList.add('hidden')
+        document.getElementById('payment-info').classList.remove('hidden')
+    })
+
+
+    document.getElementById('make-payment').addEventListener('click', function(e) {
+        submitFormData()
+    })
+
+    function submitFormData() {
+        console.log('Payment button clicked')
+
+
+        var url = '/process_order/'
+
+        fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({
+                    'address': form.address.value,
+                    'address2': form.address.value,
+                    'city': form.city.value,
+                    'state': form.state.value,
+                    'pincode': form.pincode.value,
+                    'total': total
+                })
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Success', data);
+                alert('Transaction Completed!')
+                window.location.href = "{% url 'store' %}"
+            })
+
+    }
+</script>
+
+{% endblock content %}

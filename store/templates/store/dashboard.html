@@ -1,0 +1,113 @@
+{% extends 'store/main.html' %} {% block content %} {% include 'store/status.html' %}
+
+
+<div>
+    <hr>
+    <div class="card card-body">
+        <a class="btn btn-success" href="{% url 'addplant' %}">Add Plant</a>
+        <br>
+        <h3>Order Received</h3>
+        <div class="table-responsive">
+
+
+
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Date Ordered</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Update</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+
+                        {% for item in items %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{item.order.customer.name}}</td>
+                        <td>{{item.order.customer.email}}</td>
+                        <td>{{item.product.name}}</td>
+                        <td style="text-align:center">{{item.quantity}}</td>
+                        <td>{{item.order.date_ordered}}</td>
+                        <td>{{item.status}}</td>
+                        <td><a style="text-decoration:None" href="" data-toggle="modal"
+                                data-target="#exampleModal{{forloop.counter}}">Update</a></td>
+
+                        <div class="modal fade" id="exampleModal{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div style="max-width:300px" class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Update Info</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="" method="POST" id='form-save'>
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label>Email</label>
+                                                <select required type="email" name="email" class="form-control" placeholder="">
+                                                    {% for email in emails %}
+                                                    {% if email == item.order.customer.email %}
+                                                    <option selected>{{email}}</option>
+                                                    {% else %}
+                                                    <option>{{email}}</option>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                                <label>Product</label>
+                                                <select required type="text" name="product" class="form-control" placeholder="">
+                                                    {% for i in products %}
+                                                    {% if i == item.product.name %}
+                                                    <option selected>{{i}}</option>
+                                                    {% else %}
+                                                    <option>{{i}}</option>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                                <label>Status</label>
+                                                <select required type="text" name="status" class="form-control" placeholder="">
+                                                    <option>Pending</option>
+                                                    <option>Out for delivery</option>
+                                                    <option>Delivered</option>
+                                                </select>
+                                            </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary" id="save">Save changes</button>
+                                        
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    document.getElementById('cart-icon').classList.add('hidden');
+    document.getElementById('cart-total').classList.add('hidden');
+    
+    
+</script>
+
+{% endblock content %}
